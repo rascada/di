@@ -8,7 +8,7 @@ export class Injector {
   private providers = new Map();
 
   constructor(private providers = []) {
-    providers.forEach(provider => this.providers.set(provider.name, provider));
+    providers.forEach(provider => this.providers.set(provider.name.toLowerCase(), provider));
   }
 
   get(...providers: Provider[]) {
@@ -32,7 +32,7 @@ export class Injector {
 
   resolve(provider: Provider) {
     const { providers, resolvedProviders } = this;
-    const providerName = typeof provider === 'object' ? provider.class : provider;
+    const providerName = (typeof provider === 'object' ? provider.class : provider).toLowerCase();
     
     if (resolvedProviders.has(providerName)) {
       return resolvedProviders.get(providerName);
