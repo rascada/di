@@ -16,8 +16,16 @@ export class Injector {
     return resolvedProviders.length < 2 ? resolvedProviders[0] : resolvedProviders;
   }
 
-  resolveProvider(provider, args: any[]) {
-    const instance = new provider(...args || [], this);
+  resolveProvider(provider, args: any[] = []) {
+    const { _providers } = provider;
+    const instance = new provider(...args, this);
+
+    if (_providers) {
+      _providers.forEach(provider => {
+        instance[provider.toLowerCase()] = this.get(provider);
+      });
+    }
+
     this.resolvedProviders.set(provider.name, instance);
     return instance;
   }
