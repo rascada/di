@@ -1,4 +1,7 @@
+import {Resolvable} from './inject';
+
 export interface Provider {
+  _providers?: Provider[];
   class: string;
   args?: any[];
 }
@@ -38,6 +41,8 @@ export class Injector {
         instance[providerName(provider)] = this.get(provider);
       });
     }
+
+    instance.resolved && instance.resolved.call(instance);
 
     this.resolvedProviders.set(provider.name, instance);
     return instance;
