@@ -6,26 +6,20 @@ export class Injector {
     providers.forEach(provider => this.providers.set(provider.name, provider));
   }
 
+  get(...providers) {
+    const resolvedProviders = providers.map(providerName => this.resolve(providerName));
+    return resolvedProviders.length < 2 ? resolvedProviders[0] : resolvedProviders;
+  }
+
   resolveProvider(provider, args) {
     const instance = new provider(...args || [], this);
     this.resolvedProviders.set(provider.name, instance);
     return instance;
   }
 
-  get(...providers) {
-    const resolvedProviders = providers
-      .map(providerName => this.resolve(providerName));
-    
-    return resolvedProviders.length < 2 
-      ? resolvedProviders[0]
-      : resolvedProviders;
-  }
-
   resolve(provider) {
     const { providers, resolvedProviders } = this;
-    const providerName = typeof provider === 'object' 
-      ? provider.class
-      : provider;
+    const providerName = typeof provider === 'object' ? provider.class : provider;
     
     if (resolvedProviders.has(providerName)) {
       return resolvedProviders.get(providerName);
