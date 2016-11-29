@@ -1,4 +1,4 @@
-class Injector {
+export class Injector {
   private resolvedProviders = new Map();
   private providers = new Map();
 
