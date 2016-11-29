@@ -3,6 +3,18 @@ export interface Provider {
   args?: any[];
 }
 
+function providerName(provider) {
+  let name = '';
+
+  if (typeof provider === 'object') {
+    name = provider.class;
+  } else {
+    name = provider;
+  }
+
+  return name.toLowerCase();
+}
+
 export class Injector {
   private resolvedProviders = new Map();
   private providers = new Map();
@@ -22,7 +34,7 @@ export class Injector {
 
     if (_providers) {
       _providers.forEach(provider => {
-        instance[provider.toLowerCase()] = this.get(provider);
+        instance[providerName(provider)] = this.get(provider);
       });
     }
 
@@ -32,14 +44,14 @@ export class Injector {
 
   resolve(provider: Provider) {
     const { providers, resolvedProviders } = this;
-    const providerName = (typeof provider === 'object' ? provider.class : provider).toLowerCase();
+    const name = providerName(provider);
     
-    if (resolvedProviders.has(providerName)) {
-      return resolvedProviders.get(providerName);
-    } else if (providers.has(providerName)) {
-      return this.resolveProvider(providers.get(providerName), provider.args);      
+    if (resolvedProviders.has(name)) {
+      return resolvedProviders.get(name);
+    } else if (providers.has(name)) {
+      return this.resolveProvider(providers.get(name), provider.args);
     } else {
-      throw new Error(`Missing class ${providerName}`);
+      throw new Error(`Missing class ${name}`);
     }
   }
 }
