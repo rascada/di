@@ -1,5 +1,14 @@
-export function Inject(...providers) {
+export interface InjectOptions {
+    providers: Array;
+}
+
+export function Inject(options, ...providers) {
     return function (target) {
-        target._providers = providers;
+        if (typeof options === 'object') {
+            const { providers }: InjectOptions = options;
+            target._providers = providers;
+        } else {
+            target._providers = [options, ...providers];
+        }
     }
 }
