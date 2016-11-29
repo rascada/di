@@ -23,14 +23,14 @@ export class Injector {
     providers.forEach(provider => this.providers.set(provider.name.toLowerCase(), provider));
   }
 
-  get(...providers: Provider[]) {
+  get(...providers) {
     const resolvedProviders = providers.map(providerName => this.resolve(providerName));
     return resolvedProviders.length < 2 ? resolvedProviders[0] : resolvedProviders;
   }
 
   resolveProvider(provider, args: any[] = []) {
     const { _providers } = provider;
-    const instance = new provider(...args, this);
+    const instance = new provider(...args);
 
     if (_providers) {
       _providers.forEach(provider => {
@@ -42,7 +42,7 @@ export class Injector {
     return instance;
   }
 
-  resolve(provider: Provider) {
+  resolve(provider: Provider | string) {
     const { providers, resolvedProviders } = this;
     const name = providerName(provider);
     
