@@ -29,8 +29,9 @@ export class Injector {
   }
 
   resolveProvider(provider, args: any[] = []) {
-    const { _providers } = provider;
-    const instance = new provider(...args);
+    const { _providers, resolver } = provider;
+    const env = resolver ? [...args, this] : args;
+    const instance: Resolvable = new provider(...env);
 
     if (_providers) {
       _providers.forEach(provider => {
