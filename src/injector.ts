@@ -1,6 +1,6 @@
 export interface Provider {
   class: string;
-  args: any[];
+  args?: any[];
 }
 
 export class Injector {
